@@ -51,6 +51,7 @@ percentages<-data.frame(student=c("Alejandro", "Pietro", "Jane"), "May"=c(90,12,
 Fortunately, there is a function in the tidyverse packages to deal with this problem too. `gather()` takes the names of the columns which are values, the `key` and the `value` as arguments. This time, the `key` is the name of the variable with values as column names, and the `value` is the name of the variable with values spread over multiple columns. Ie:
 
 ```{R Intro-bio5}
+library(tidyverse)
 gather(percentages, "May", "June", key="Month", value = "Percentage")
 ```
 
