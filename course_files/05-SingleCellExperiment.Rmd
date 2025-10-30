@@ -109,8 +109,11 @@ We have two files in `data/tung`:
 Let's read these into R, using the standard `read.table()` function:
 
 ```{r}
-tung_counts <- read.table("data/tung/molecules.txt", sep = "\t")
-tung_annotation <- read.table("data/tung/annotation.txt", sep = "\t", header = TRUE)
+#read.table(), txt file that has separate entry by tab (\t)
+tung_counts <- read.table("course_files/data/tung/molecules.txt", sep = "\t")
+
+tung_annotation <- read.table("course_files/data/tung/annotation.txt", sep = "\t", header = TRUE) # nolint
+
 ```
 
 We can now create a `SingleCellExperiment` object using the function of the same name:
@@ -121,16 +124,18 @@ if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
 BiocManager::install("SingleCellExperiment")
+
+```
+
+```{r, message=FALSE, warning=FALSE}
 library(SingleCellExperiment)
-
-
 # note that the data passed to the assay slot has to be a matrix!
 tung <- SingleCellExperiment(
   assays = list(counts = as.matrix(tung_counts)),
   colData = tung_annotation
 )
 
-# remove the original tables as we don't need them anymore
+# remove the original tables as we don't need them anymore [rm]
 rm(tung_counts, tung_annotation)
 ```
 
@@ -156,7 +161,12 @@ To access different parts of the SCE object, we can use the following accessor f
 | `reducedDim(sce, "PCA")` | The reduced dimensionality table named "PCA" |
 | `sce$colname` | Shortcut to access the colum "colname" from `colData`. This is equivalent to `colData(sce)$colname` |
 | `sce[<rows>, <columns>]` | We can use the square brackets to subset the SCE object by rows or columns, similarly to how we subset `matrix` or `data.frame` objects |
-
+```{r}
+#Table of gene [row] metadata (with 0 columns)
+rowData(tung)
+# Table of cell/condition/groups[column] metadata. (with 0 rows)
+colData(tung)
+```
 ::: note
 **Naming Assays**
 
