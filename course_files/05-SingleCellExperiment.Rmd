@@ -206,6 +206,10 @@ sce <- read10xCounts("data/pbmc_1k_filtered")
 
 1.  What are the classes of the "colData" and "assay" slots of our `tung` object?
 
+ ```{r}   
+ class(tung$colData)
+
+ ```
     <details>
 
     <summary>Hint</summary>
