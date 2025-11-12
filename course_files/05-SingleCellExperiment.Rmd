@@ -110,10 +110,15 @@ Let's read these into R, using the standard `read.table()` function:
 
 ```{r}
 #read.table(), txt file that has separate entry by tab (\t)
-tung_counts <- read.table("course_files/data/tung/molecules.txt", sep = "\t")
+tung_counts <- read.table("data/tung/molecules.txt", sep = "\t")
 
-tung_annotation <- read.table("course_files/data/tung/annotation.txt", sep = "\t", header = TRUE) # nolint
+tung_annotation <- read.table("data/tung/annotation.txt", sep = "\t", header = TRUE) # nolint
 
+```
+
+```{r}
+install.packages("renv")
+renv::init() 
 ```
 
 We can now create a `SingleCellExperiment` object using the function of the same name:
@@ -154,19 +159,21 @@ tung
 To access different parts of the SCE object, we can use the following accessor functions:
 
 | Function | Description |
-|---:|:---|
+|-----------------------------------:|:-----------------------------------|
 | `rowData(sce)` | Table of gene metadata. |
 | `colData(sce)` | Table of cell metadata. |
 | `assay(sce, "counts")` | The assay named "counts". |
 | `reducedDim(sce, "PCA")` | The reduced dimensionality table named "PCA" |
 | `sce$colname` | Shortcut to access the colum "colname" from `colData`. This is equivalent to `colData(sce)$colname` |
 | `sce[<rows>, <columns>]` | We can use the square brackets to subset the SCE object by rows or columns, similarly to how we subset `matrix` or `data.frame` objects |
+
 ```{r}
 #Table of gene [row] metadata (with 0 columns)
 rowData(tung)
 # Table of cell/condition/groups[column] metadata. (with 0 rows)
 colData(tung)
 ```
+
 ::: note
 **Naming Assays**
 
@@ -193,30 +200,49 @@ However, to read the output of the popular tool *cellranger* (used to quantify 1
 Here is an example usage:
 
 ```{r, eval=FALSE}
+install.packages("DropletUtils")
 library(DropletUtils)
 
+
+
+```
+
+```{r,eval=FALSE}
 # importing the raw count data
 sce <- read10xCounts("data/pbmc_1k_raw")
 
 # importing the pre-filtered count data
 sce <- read10xCounts("data/pbmc_1k_filtered")
+
+```
+
+```{r}
+renv::snapshot()
+
+```
+
+```{r}
+renv::restore()
 ```
 
 **Exercise 1**
 
 1.  What are the classes of the "colData" and "assay" slots of our `tung` object?
 
- ```{r}   
- class(tung$colData)
+```{r}
+class(tung$colData)
 
- ```
-    <details>
+```
 
-    <summary>Hint</summary>
+```         
+<details>
 
-    To check the class of an object you can use the `class()` function.
+<summary>Hint</summary>
 
-    </details>
+To check the class of an object you can use the `class()` function.
+
+</details>
+```
 
 2.  How many batches and cells per batch are there?
     Does that number make sense?
@@ -294,7 +320,7 @@ logcounts(tung)[1:10, 1:4] # or: assay(tung, "logcounts")[1:10, 1:5]
 Here is a summary of other ways to modify data in SCE objects:
 
 | Code | Description |
-|---:|:---|
+|-----------------------------------:|:-----------------------------------|
 | `assay(sce, "name") <- matrix` | Add a new assay matrix. The new matrix has to have matching rownames and colnames to the existing object. |
 | `rowData(sce) <- data_frame` | Replace `rowData` with a new table (or add one if it does not exist). |
 | `colData(sce) <- data_frame` | Replace `colData` with a new table (or add one if it does not exist). |
@@ -490,7 +516,7 @@ Notice how the new SCE object has fewer cells than the original.
 Here is a summary of the syntax used for some common filters:
 
 | Filter on | Code | Description |
-|:--:|---:|:---|
+|:----------------------:|-----------------------:|:-----------------------|
 | Cells | `colSums(counts(sce)) > x` | Total counts per cell greater than *x*. |
 | Cells | `colSums(counts(sce) > x) > y` | Cells with at least *y* genes having counts greater than *x*. |
 | Genes | `rowSums(counts(sce)) > x` | Total counts per gene greater than *x*. |

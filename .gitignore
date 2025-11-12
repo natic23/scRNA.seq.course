@@ -4,3 +4,4 @@ nextflow_output
 */.DS_*
 .nextflow*
 /course_files/website
+.Rproj.user
